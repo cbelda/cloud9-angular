@@ -1,5 +1,6 @@
 # ------------------------------------------------------------------------------
 # Based on a work at https://github.com/docker/docker.
+# and the work done in https://github.com/kdelfour/cloud9-docker.git
 # ------------------------------------------------------------------------------
 # Pull base image.
 FROM kdelfour/supervisor-docker
@@ -17,11 +18,7 @@ RUN sudo apt-get install -y nodejs
 RUN PATH="/opt/node/bin:$PATH"
 
 # ------------------------------------------------------------------------------
-# Fix npm permissions issues
-# RUN mkdir ~/.npm-global
-# RUN npm config set prefix '~/.npm-global'
-# RUN export PATH=~/.npm-global/bin:$PATH
-# RUN source ~/.profile
+# Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 RUN sudo apt-get update && sudo apt-get install yarn
@@ -29,8 +26,11 @@ RUN sudo apt-get update && sudo apt-get install yarn
 # ------------------------------------------------------------------------------
 # Install Angular CLI
 RUN npm i -g npm@5.6.0
-# RUN npm i -g @angular/cli@latest
 RUN yarn global add @angular/cli@latest
+
+# ------------------------------------------------------------------------------
+# Clear "production" value of NODE_ENV
+RUN NODE_ENV=""
     
 # ------------------------------------------------------------------------------
 # Install Cloud9
